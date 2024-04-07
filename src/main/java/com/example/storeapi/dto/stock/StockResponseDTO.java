@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class StockResponseDTO {
     private Long id;
     private int quantity;
-    private Long productCode;
+    private String productCode;
     private Long storeId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

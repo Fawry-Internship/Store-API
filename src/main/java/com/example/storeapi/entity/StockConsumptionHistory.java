@@ -24,7 +24,7 @@ public class StockConsumptionHistory {
     private Long storeId;
 
     @Column(name = "productCode")
-    private Long productCode;
+    private String productCode;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_id")
     private Stock stock;

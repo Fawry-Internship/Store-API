@@ -18,7 +18,7 @@ public class Stock {
     private Long id;
 
     private int quantity;
-    private Long productCode;
+    private String productCode;
 
     @JsonIgnoreProperties("store")
     @ManyToOne(fetch = FetchType.EAGER)

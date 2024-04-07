@@ -14,12 +14,12 @@ public interface StockService {
 
     public void deleteAllStocks();
 
-    StockResponseDTO searchProduct(Long storeId, Long productCode);
+    StockResponseDTO searchProduct(Long storeId, String productCode);
 
-    boolean checkAvailability(Long storeId, Long productCode);
+    boolean checkAvailability(Long storeId, String productCode);
 
     StockResponseDTO updateStock(Long stockId, StockRequestDTO updatedStockResponseDTO);
 
-    ResponseEntity<String> consumeProduct(Long storeId, Long productCode);
+    ResponseEntity<String> consumeProduct(Long storeId, String productCode);
 }
 

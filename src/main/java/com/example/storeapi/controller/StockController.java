@@ -23,13 +23,13 @@ public class StockController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<StockResponseDTO> searchProduct(@RequestParam Long storeId, @RequestParam Long productCode) {
+    public ResponseEntity<StockResponseDTO> searchProduct(@RequestParam Long storeId, @RequestParam String productCode) {
         StockResponseDTO stockResponseDTO = stockService.searchProduct(storeId, productCode);
         return ResponseEntity.ok(stockResponseDTO);
     }
 
     @GetMapping("/checkAvailability")
-    public boolean checkAvailability(@RequestParam Long storeId, @RequestParam Long productCode) {
+    public boolean checkAvailability(@RequestParam Long storeId, @RequestParam String productCode) {
         return stockService.checkAvailability(storeId, productCode);
     }
 
@@ -40,7 +40,7 @@ public class StockController {
     }
 
     @PostMapping("/consume")
-    public ResponseEntity<String> consumeProduct(@RequestParam Long storeId, @RequestParam Long productCode) {
+    public ResponseEntity<String> consumeProduct(@RequestParam Long storeId, @RequestParam String productCode) {
         return stockService.consumeProduct(storeId, productCode);
     }
 
