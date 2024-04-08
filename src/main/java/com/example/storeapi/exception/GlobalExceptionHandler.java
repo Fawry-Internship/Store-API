@@ -2,21 +2,14 @@ package com.example.storeapi.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Date;
-
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(RecordNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleRecordNotFoundException(RecordNotFoundException e){
-        ErrorDetails errorDetails = new ErrorDetails(
-                e.getMessage(),
-                HttpStatus.NOT_FOUND.value(),
-                new Date()
-        );
 
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    @ExceptionHandler(RecordNotFoundException.class)
+    public ResponseEntity<String> handleStockNotFoundException(RecordNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

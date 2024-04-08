@@ -10,10 +10,8 @@ import com.example.storeapi.mapper.StockMapper;
 import com.example.storeapi.repository.StockConsumptionHistoryRepository;
 import com.example.storeapi.repository.StockRepository;
 import com.example.storeapi.repository.StoreRepository;
-import com.example.storeapi.service.ProductService;
 import com.example.storeapi.service.StockService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,24 +23,16 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class StockServiceImpl implements StockService {
     private final StockRepository stockRepository;
     private final StoreRepository storeRepository;
     private final StockConsumptionHistoryRepository stockConsumptionHistoryRepository;
     private final StockMapper stockMapper;
-    private final ProductService productService;
 
     public void deleteAllStocks() {
         stockRepository.deleteAll();
     }
     public StockResponseDTO addStock(Long storeId, StockRequestDTO stockRequestDTO) {
-        String productCode = stockRequestDTO.getProductCode();
-        boolean isProductAvailable = productService.checkProductAvailability(productCode);
-        if (!isProductAvailable) {
-            log.error("This product with code {} doesn't Exist.", productService);
-            throw new RecordNotFoundException("This product " + productCode + " with code doesn't Exist: ");
-        }
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new IllegalArgumentException("Store with ID " + storeId + " not found."));
 
@@ -97,16 +87,8 @@ public class StockServiceImpl implements StockService {
 
     @Transactional
     public ResponseEntity<String> consumeProduct(Long storeId, String productCode) {
-        boolean isProductAvailable = productService.checkProductAvailability(productCode);
-        if (!isProductAvailable) {
-            log.error("This product with code {} doesn't Exist.", productService);
-            throw new RecordNotFoundException("This product " + productCode + " with code doesn't Exist: ");
-        }
         Stock stock = stockRepository.findByStoreIdAndProductCode(storeId, productCode)
-                .orElseThrow(() ->{
-                    log.error("Stock not found for storeId: " + storeId + ", productCode: " + productCode);
-                    return new RecordNotFoundException("Stock not found for storeId: " + storeId + ", productCode: " + productCode);
-                });
+                .orElseThrow(() -> new RecordNotFoundException("Stock not found for storeId: " + storeId + ", productCode: " + productCode));
 
         if (stock.getQuantity() > 0) {
             int quantityBeforeUpdate = stock.getQuantity();

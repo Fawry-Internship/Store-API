@@ -39,7 +39,7 @@ public class StockController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedStockResponseDTO);
     }
 
-    @PostMapping("/consume")
+    @GetMapping("/consume")
     public ResponseEntity<String> consumeProduct(@RequestParam Long storeId, @RequestParam String productCode) {
         return stockService.consumeProduct(storeId, productCode);
     }
