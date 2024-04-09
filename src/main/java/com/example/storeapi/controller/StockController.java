@@ -4,6 +4,7 @@ import com.example.storeapi.dto.stock.StockRequestDTO;
 import com.example.storeapi.dto.stock.StockResponseDTO;
 
 import com.example.storeapi.service.StockService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,16 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/stock")
 public class StockController {
 
     private final StockService stockService;
-
-    @Autowired
-    public StockController(StockService stockService) {
-        this.stockService = stockService;
-    }
 
     @GetMapping("/search")
     public ResponseEntity<StockResponseDTO> searchProduct(@RequestParam Long storeId, @RequestParam String productCode) {
@@ -29,8 +26,8 @@ public class StockController {
     }
 
     @GetMapping("/checkAvailability")
-    public boolean checkAvailability(@RequestParam Long storeId, @RequestParam String productCode) {
-        return stockService.checkAvailability(storeId, productCode);
+    public ResponseEntity<Boolean> checkAvailability(@RequestParam Long storeId, @RequestParam String productCode) {
+        return ResponseEntity.ok(stockService.checkAvailability(storeId, productCode));
     }
 
     @PostMapping("/add/{storeId}")

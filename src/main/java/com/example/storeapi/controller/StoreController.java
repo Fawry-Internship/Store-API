@@ -8,6 +8,7 @@ import com.example.storeapi.mapper.StoreMapper;
 import com.example.storeapi.entity.Store;
 import com.example.storeapi.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +23,8 @@ public class StoreController {
 
 
     @DeleteMapping("/delete/{storeId}")
-    public void deleteStoreById(@PathVariable Long storeId) {
-        storeService.deleteStoreById(storeId);
+    public ResponseEntity<String> deleteStoreById(@PathVariable Long storeId) {
+        return new ResponseEntity<>(storeService.deleteStoreById(storeId), HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/update/{storeId}")

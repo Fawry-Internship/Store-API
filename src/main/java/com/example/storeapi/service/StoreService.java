@@ -11,7 +11,7 @@ public interface StoreService {
 
     List<StoreResponseDTO> getAllStores();
 
-    void deleteStoreById(Long storeId);
+    String deleteStoreById(Long storeId);
 
     StoreResponseDTO updateStore(Long storeId, StoreRequestDTO updatedStore);
 }

@@ -34,4 +34,15 @@ public class Stock {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+
+    @Override
+    public String toString() {
+        return "Stock{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", productCode='" + productCode + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

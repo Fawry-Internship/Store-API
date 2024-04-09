@@ -19,4 +19,16 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorDetails> handleConflictException(ConflictException e){
+        ErrorDetails errorDetails = new ErrorDetails(
+                e.getMessage(),
+                HttpStatus.CONFLICT.value(),
+                new Date()
+        );
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
 }

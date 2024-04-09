@@ -5,6 +5,7 @@ import com.example.storeapi.dto.stock.StockResponseDTO;
 import com.example.storeapi.entity.Stock;
 import com.example.storeapi.entity.StockConsumptionHistory;
 import com.example.storeapi.entity.Store;
+import com.example.storeapi.exception.ConflictException;
 import com.example.storeapi.exception.RecordNotFoundException;
 import com.example.storeapi.mapper.StockMapper;
 import com.example.storeapi.repository.StockConsumptionHistoryRepository;
@@ -37,12 +38,21 @@ public class StockServiceImpl implements StockService {
         stockRepository.deleteAll();
     }
     public StockResponseDTO addStock(Long storeId, StockRequestDTO stockRequestDTO) {
+        log.info("Admin want to add stock {}, for store with id {}", stockRequestDTO, storeId);
+
         String productCode = stockRequestDTO.getProductCode();
+        stockRepository.findByProductCode(productCode)
+                .ifPresent(stock -> {
+                    log.error("This stock Already exist for product with code {}", productCode);
+                    throw new ConflictException("This stock for product with code " + productCode + " already exists");
+                });
+
         boolean isProductAvailable = productService.checkProductAvailability(productCode);
         if (!isProductAvailable) {
             log.error("This product with code {} doesn't Exist.", productService);
             throw new RecordNotFoundException("This product " + productCode + " with code doesn't Exist: ");
         }
+
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new IllegalArgumentException("Store with ID " + storeId + " not found."));
 
@@ -51,14 +61,7 @@ public class StockServiceImpl implements StockService {
         stock.setCreatedAt(LocalDateTime.now());
         stock.setUpdatedAt(LocalDateTime.now());
         Stock savedStock = stockRepository.save(stock);
-
-        // Update stock history
-        StockConsumptionHistory history = new StockConsumptionHistory();
-        history.setStock(savedStock);
-        history.setQuantityBeforeUpdate(savedStock.getQuantity());
-        history.setStoreId(storeId);
-        history.setCreatedAt(LocalDateTime.now());
-        stockConsumptionHistoryRepository.save(history);
+        log.info("Stock Added successfully {}", stock);
 
         return stockMapper.toDTO(savedStock);
     }
@@ -86,46 +89,56 @@ public class StockServiceImpl implements StockService {
 
     @Transactional
     public StockResponseDTO updateStock(Long stockId, StockRequestDTO updatedStockResponseDTO) {
+        log.info("Admin want to update stock with id {}", stockId);
         Stock updatedStock = stockMapper.toEntity(updatedStockResponseDTO);
         Stock existingStock = stockRepository.findById(stockId)
                 .orElseThrow(() -> new RecordNotFoundException("Stock with ID " + stockId + " not found."));
 
+        log.info("stock before update {}", existingStock);
+
         existingStock.setQuantity(updatedStock.getQuantity());
         existingStock.setProductCode(updatedStock.getProductCode());
+        log.info("stock after update {}", existingStock);
+
         return stockMapper.toDTO(stockRepository.save(existingStock));
     }
 
     @Transactional
     public ResponseEntity<String> consumeProduct(Long storeId, String productCode) {
+        log.info("Customer want to consume this product with code {}, from store with id {}", productCode, storeId);
+
         boolean isProductAvailable = productService.checkProductAvailability(productCode);
         if (!isProductAvailable) {
             log.error("This product with code {} doesn't Exist.", productService);
             throw new RecordNotFoundException("This product " + productCode + " with code doesn't Exist: ");
         }
+
         Stock stock = stockRepository.findByStoreIdAndProductCode(storeId, productCode)
                 .orElseThrow(() ->{
                     log.error("Stock not found for storeId: " + storeId + ", productCode: " + productCode);
                     return new RecordNotFoundException("Stock not found for storeId: " + storeId + ", productCode: " + productCode);
                 });
 
-        if (stock.getQuantity() > 0) {
-            int quantityBeforeUpdate = stock.getQuantity();
-            stock.setQuantity(quantityBeforeUpdate - 1);
-            stockRepository.save(stock);
-
-            // Save consumption history
-            StockConsumptionHistory updateHistory = new StockConsumptionHistory();
-            updateHistory.setStoreId(storeId);
-            updateHistory.setProductCode(productCode);
-            updateHistory.setQuantityBeforeUpdate(quantityBeforeUpdate);
-            updateHistory.setQuantityAfterUpdate(quantityBeforeUpdate - 1);
-            updateHistory.setCreatedAt(LocalDateTime.now());
-            updateHistory.setStock(stock);
-            stockConsumptionHistoryRepository.save(updateHistory);
-
-            return ResponseEntity.ok("Product consumed successfully");
-        } else {
-           throw new RecordNotFoundException("Product not available");
+        if (stock.getQuantity() < 1 ) {
+            log.error("Product with code {} not available", productCode);
+            throw new RecordNotFoundException("Product with code" + productCode + "not available");
         }
+
+        int quantityBeforeUpdate = stock.getQuantity();
+        stock.setQuantity(quantityBeforeUpdate - 1);
+        stockRepository.save(stock);
+
+        // Save consumption history
+        StockConsumptionHistory updateHistory = new StockConsumptionHistory();
+        updateHistory.setStoreId(storeId);
+        updateHistory.setProductCode(productCode);
+        updateHistory.setQuantityBeforeUpdate(quantityBeforeUpdate);
+        updateHistory.setQuantityAfterUpdate(quantityBeforeUpdate - 1);
+        updateHistory.setCreatedAt(LocalDateTime.now());
+        updateHistory.setStock(stock);
+        stockConsumptionHistoryRepository.save(updateHistory);
+        log.info("Product consumed successfully");
+
+        return ResponseEntity.ok("Product consumed successfully");
     }
 }
