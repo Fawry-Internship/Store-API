@@ -1,17 +1,18 @@
 package com.example.storeapi.controller;
 
-import com.example.storeapi.dto.stock.StockRequestDTO;
-import com.example.storeapi.dto.stock.StockResponseDTO;
+import com.example.storeapi.model.ProductResponseModel;
+import com.example.storeapi.model.dto.stock.StockRequestDTO;
+import com.example.storeapi.model.dto.stock.StockResponseDTO;
 
 import com.example.storeapi.service.StockService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/stock")
@@ -38,7 +39,14 @@ public class StockController {
 
     @PostMapping("/consume")
     public ResponseEntity<String> consumeProduct(@RequestParam Long storeId, @RequestParam String productCode) {
-        return stockService.consumeProduct(storeId, productCode);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(stockService.consumeProduct(storeId, productCode));
+    }
+
+    @GetMapping("products")
+    public ResponseEntity<List<ProductResponseModel>> getAllStocksProducts(){
+        return ResponseEntity.ok(stockService.getAllStocksProducts());
     }
 
     //CRUD
@@ -57,4 +65,5 @@ public class StockController {
     public List<StockResponseDTO> getAllStocks() {
         return stockService.getAllStocks();
     }
+
 }

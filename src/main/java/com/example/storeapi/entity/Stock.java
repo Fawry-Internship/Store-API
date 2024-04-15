@@ -18,6 +18,8 @@ public class Stock {
     private Long id;
 
     private int quantity;
+
+    @Column(nullable = false, unique = true)
     private String productCode;
 
     @JsonIgnoreProperties("store")

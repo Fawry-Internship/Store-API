@@ -1,7 +1,8 @@
 package com.example.storeapi.service.impl;
 
-import com.example.storeapi.dto.stock.StockRequestDTO;
-import com.example.storeapi.dto.stock.StockResponseDTO;
+import com.example.storeapi.model.ProductResponseModel;
+import com.example.storeapi.model.dto.stock.StockRequestDTO;
+import com.example.storeapi.model.dto.stock.StockResponseDTO;
 import com.example.storeapi.entity.Stock;
 import com.example.storeapi.entity.StockConsumptionHistory;
 import com.example.storeapi.entity.Store;
@@ -15,7 +16,6 @@ import com.example.storeapi.service.ProductService;
 import com.example.storeapi.service.StockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,7 +104,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Transactional
-    public ResponseEntity<String> consumeProduct(Long storeId, String productCode) {
+    public String consumeProduct(Long storeId, String productCode) {
         log.info("Customer want to consume this product with code {}, from store with id {}", productCode, storeId);
 
         boolean isProductAvailable = productService.checkProductAvailability(productCode);
@@ -139,6 +139,23 @@ public class StockServiceImpl implements StockService {
         stockConsumptionHistoryRepository.save(updateHistory);
         log.info("Product consumed successfully");
 
-        return ResponseEntity.ok("Product consumed successfully");
+        return "Product consumed successfully";
     }
+
+    @Override
+    public List<ProductResponseModel> getAllStocksProducts() {
+        List<ProductResponseModel> allStockProducts = productService.getAllProducts()
+                .stream()
+                .filter(product -> stockRepository.existsByProductCode(product.getCode()))
+                .map(product -> {
+                    boolean isActive = checkAvailability(1L, product.getCode());
+                    product.setActive(isActive);
+                    return product;
+                })
+                .collect(Collectors.toList());
+
+        log.info("All stocks Products {}", allStockProducts);
+        return allStockProducts;
+    }
+
 }

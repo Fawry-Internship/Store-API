@@ -18,11 +18,9 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name;
     private String address;
-    @JsonIgnore
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    private List<Stock> stocks;
 
     @Override
     public String toString() {

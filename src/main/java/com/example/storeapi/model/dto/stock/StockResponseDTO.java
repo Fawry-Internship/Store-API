@@ -1,4 +1,4 @@
-package com.example.storeapi.dto.stock;
+package com.example.storeapi.model.dto.stock;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

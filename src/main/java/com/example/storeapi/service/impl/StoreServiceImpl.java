@@ -1,7 +1,7 @@
 package com.example.storeapi.service.impl;
 
-import com.example.storeapi.dto.store.StoreRequestDTO;
-import com.example.storeapi.dto.store.StoreResponseDTO;
+import com.example.storeapi.model.dto.store.StoreRequestDTO;
+import com.example.storeapi.model.dto.store.StoreResponseDTO;
 import com.example.storeapi.entity.Store;
 import com.example.storeapi.exception.RecordNotFoundException;
 import com.example.storeapi.mapper.StoreMapper;

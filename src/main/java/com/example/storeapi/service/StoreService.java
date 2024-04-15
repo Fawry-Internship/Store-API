@@ -1,8 +1,8 @@
 package com.example.storeapi.service;
 
 
-import com.example.storeapi.dto.store.StoreRequestDTO;
-import com.example.storeapi.dto.store.StoreResponseDTO;
+import com.example.storeapi.model.dto.store.StoreRequestDTO;
+import com.example.storeapi.model.dto.store.StoreResponseDTO;
 
 import java.util.List;
 

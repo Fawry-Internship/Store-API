@@ -1,4 +1,4 @@
-package com.example.storeapi.dto.stock;
+package com.example.storeapi.model.dto.stock;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
