@@ -20,6 +20,16 @@ public class StockController {
 
     private final StockService stockService;
 
+    @DeleteMapping("/delete/{stockId}")
+    public ResponseEntity<String> deleteStockById(@PathVariable Long stockId){
+        return ResponseEntity.ok(stockService.deleteStockById(stockId));
+    }
+
+    @GetMapping("{stockId}")
+    public ResponseEntity<StockResponseDTO> findStockById(@PathVariable Long stockId) {
+        return ResponseEntity.ok(stockService.findStockById(stockId));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<StockResponseDTO> searchProduct(@RequestParam Long storeId, @RequestParam String productCode) {
         StockResponseDTO stockResponseDTO = stockService.searchProduct(storeId, productCode);
@@ -65,5 +75,4 @@ public class StockController {
     public List<StockResponseDTO> getAllStocks() {
         return stockService.getAllStocks();
     }
-
 }

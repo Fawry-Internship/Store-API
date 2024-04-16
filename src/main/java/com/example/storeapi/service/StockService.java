@@ -22,5 +22,9 @@ public interface StockService {
     String consumeProduct(Long storeId, String productCode);
 
     List<ProductResponseModel> getAllStocksProducts();
+
+    StockResponseDTO findStockById(Long stockId);
+
+    String deleteStockById(Long stockId);
 }
 

@@ -158,4 +158,27 @@ public class StockServiceImpl implements StockService {
         return allStockProducts;
     }
 
+    @Override
+    public StockResponseDTO findStockById(Long stockId) {
+       Stock stock = stockRepository.findById(stockId)
+               .orElseThrow(() -> {
+                   log.error("This stock with id {} doesn't exist", stockId);
+                  return new RecordNotFoundException("This stock with id " + stockId + " doesn't exist");
+               });
+       StockResponseDTO stockResponseDTO = stockMapper.toDTO(stock);
+       log.info("stock details {}", stockResponseDTO);
+       return stockResponseDTO;
+    }
+
+    @Override
+    public String deleteStockById(Long stockId) {
+        Stock stock = stockRepository.findById(stockId)
+                .orElseThrow(() -> {
+                    log.error("This stock with id {} Already not exist", stockId);
+                    return new RecordNotFoundException("This stock with id " + stockId + "Already not exist");
+                });
+        stockRepository.delete(stock);
+        return "success";
+    }
+
 }
