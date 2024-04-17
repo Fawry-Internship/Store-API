@@ -1,23 +1,35 @@
 package com.example.storeapi.controller;
 
-import com.example.storeapi.dto.stock.StockRequestDTO;
-import com.example.storeapi.dto.stock.StockResponseDTO;
+import com.example.storeapi.entity.StockConsumptionHistory;
+import com.example.storeapi.model.ProductResponseModel;
+import com.example.storeapi.model.dto.stock.StockRequestDTO;
+import com.example.storeapi.model.dto.stock.StockResponseDTO;
 
 import com.example.storeapi.service.StockService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/stock")
 public class StockController {
 
     private final StockService stockService;
+
+    @DeleteMapping("/delete/{stockId}")
+    public ResponseEntity<String> deleteStockById(@PathVariable Long stockId){
+        return ResponseEntity.ok(stockService.deleteStockById(stockId));
+    }
+
+    @GetMapping("{stockId}")
+    public ResponseEntity<StockResponseDTO> findStockById(@PathVariable Long stockId) {
+        return ResponseEntity.ok(stockService.findStockById(stockId));
+    }
 
     @GetMapping("/search")
     public ResponseEntity<StockResponseDTO> searchProduct(@RequestParam Long storeId, @RequestParam String productCode) {
@@ -38,7 +50,14 @@ public class StockController {
 
     @PostMapping("/consume")
     public ResponseEntity<String> consumeProduct(@RequestParam Long storeId, @RequestParam String productCode) {
-        return stockService.consumeProduct(storeId, productCode);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(stockService.consumeProduct(storeId, productCode));
+    }
+
+    @GetMapping("products")
+    public ResponseEntity<List<ProductResponseModel>> getAllStocksProducts(){
+        return ResponseEntity.ok(stockService.getAllStocksProducts());
     }
 
     //CRUD
@@ -56,5 +75,10 @@ public class StockController {
     @GetMapping("/getAll")
     public List<StockResponseDTO> getAllStocks() {
         return stockService.getAllStocks();
+    }
+
+    @GetMapping("/consumption-history/{stockId}")
+    public ResponseEntity<List<StockConsumptionHistory>> getStockConsumptionHistory(@PathVariable Long stockId){
+        return ResponseEntity.ok(stockService.getStockConsumptionHistory(stockId));
     }
 }

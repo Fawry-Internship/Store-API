@@ -1,6 +1,7 @@
 package com.example.storeapi.entity;
 
 import com.example.storeapi.entity.Stock;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +26,8 @@ public class StockConsumptionHistory {
 
     @Column(name = "productCode")
     private String productCode;
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_id")
     private Stock stock;

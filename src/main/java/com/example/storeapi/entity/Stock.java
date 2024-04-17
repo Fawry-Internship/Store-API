@@ -18,6 +18,8 @@ public class Stock {
     private Long id;
 
     private int quantity;
+
+    @Column(nullable = false, unique = true)
     private String productCode;
 
     @JsonIgnoreProperties("store")
@@ -26,7 +28,7 @@ public class Stock {
     private Store store;
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
-    private List<StockConsumptionHistory> updateHistory;
+    private List<StockConsumptionHistory> stockConsumptionHistory;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

@@ -1,4 +1,4 @@
-package com.example.storeapi.dto.store;
+package com.example.storeapi.model.dto.store;
 
 import jakarta.validation.constraints.NotBlank;
 

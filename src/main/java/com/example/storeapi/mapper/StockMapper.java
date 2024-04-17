@@ -1,7 +1,7 @@
 package com.example.storeapi.mapper;
 
-import com.example.storeapi.dto.stock.StockRequestDTO;
-import com.example.storeapi.dto.stock.StockResponseDTO;
+import com.example.storeapi.model.dto.stock.StockRequestDTO;
+import com.example.storeapi.model.dto.stock.StockResponseDTO;
 import com.example.storeapi.entity.Stock;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

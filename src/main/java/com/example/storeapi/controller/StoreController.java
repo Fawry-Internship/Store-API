@@ -2,9 +2,14 @@ package com.example.storeapi.controller;
 
 
 
+<<<<<<< HEAD
 import com.example.storeapi.dto.store.StoreRequestDTO;
 import com.example.storeapi.dto.store.StoreResponseDTO;
 import com.example.storeapi.entity.Store;
+=======
+import com.example.storeapi.model.dto.store.StoreRequestDTO;
+import com.example.storeapi.model.dto.store.StoreResponseDTO;
+>>>>>>> 838245fda1c9336b1d9411073d4e4e8badb47ef8
 import com.example.storeapi.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
