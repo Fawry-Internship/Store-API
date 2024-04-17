@@ -7,11 +7,13 @@ import com.example.storeapi.exception.RecordNotFoundException;
 import com.example.storeapi.mapper.StoreMapper;
 import com.example.storeapi.repository.StoreRepository;
 import com.example.storeapi.service.StoreService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,4 +68,13 @@ public class StoreServiceImpl implements StoreService {
 
         return storeMapper.toDTO(existingStore);
     }
+
+    @Override
+    public Store getById(Long storeId) {
+        log.info("Fetching store with id: {}", storeId);
+        Store store = storeRepository.findById(storeId).orElseThrow(() -> new EntityNotFoundException("Store not found with id: " + storeId));
+        log.info("Retrieved store: {}", store);
+        return store;
+    }
+
 }

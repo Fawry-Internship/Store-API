@@ -4,22 +4,22 @@ package com.example.storeapi.controller;
 
 import com.example.storeapi.dto.store.StoreRequestDTO;
 import com.example.storeapi.dto.store.StoreResponseDTO;
-import com.example.storeapi.mapper.StoreMapper;
 import com.example.storeapi.entity.Store;
 import com.example.storeapi.service.StoreService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(path = "/store")
+@RequiredArgsConstructor
 public class StoreController {
-    @Autowired
-    private StoreService storeService;
+
+    private final StoreService storeService;
 
 
     @DeleteMapping("/delete/{storeId}")
@@ -41,4 +41,10 @@ public class StoreController {
     public ResponseEntity<List<StoreResponseDTO>> getAllStores() {
         return ResponseEntity.ok(storeService.getAllStores());
     }
+
+    @GetMapping("get/{id}")
+    public ResponseEntity<Store> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(storeService.getById(id));
+    }
+
 }
