@@ -181,4 +181,12 @@ public class StockServiceImpl implements StockService {
         return "success";
     }
 
+    @Override
+    public List<StockConsumptionHistory> getStockConsumptionHistory(Long stockId) {
+        Stock stock = stockRepository.findById(stockId)
+                .orElseThrow(() -> new RecordNotFoundException("This stock doesn't exist!"));
+        List<StockConsumptionHistory> stockConsumptionHistories = stock.getStockConsumptionHistory();
+        return stockConsumptionHistories;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.storeapi.controller;
 
+import com.example.storeapi.entity.StockConsumptionHistory;
 import com.example.storeapi.model.ProductResponseModel;
 import com.example.storeapi.model.dto.stock.StockRequestDTO;
 import com.example.storeapi.model.dto.stock.StockResponseDTO;
@@ -74,5 +75,10 @@ public class StockController {
     @GetMapping("/getAll")
     public List<StockResponseDTO> getAllStocks() {
         return stockService.getAllStocks();
+    }
+
+    @GetMapping("/consumption-history/{stockId}")
+    public ResponseEntity<List<StockConsumptionHistory>> getStockConsumptionHistory(@PathVariable Long stockId){
+        return ResponseEntity.ok(stockService.getStockConsumptionHistory(stockId));
     }
 }

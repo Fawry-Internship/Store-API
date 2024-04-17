@@ -1,5 +1,6 @@
 package com.example.storeapi.service;
 
+import com.example.storeapi.entity.StockConsumptionHistory;
 import com.example.storeapi.model.ProductResponseModel;
 import com.example.storeapi.model.dto.stock.StockRequestDTO;
 import com.example.storeapi.model.dto.stock.StockResponseDTO;
@@ -26,5 +27,7 @@ public interface StockService {
     StockResponseDTO findStockById(Long stockId);
 
     String deleteStockById(Long stockId);
+
+    List<StockConsumptionHistory> getStockConsumptionHistory(Long stockId);
 }
 
